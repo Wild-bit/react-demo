@@ -1,10 +1,22 @@
 .title{
-    color:brown;
+    color:rgb(0, 0, 0);
     font-size: 28px;
     font-weight: bold;
+    line-height: 78px;
+}
+.sub-title{
+    color: black;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 48px;
 }
 .desc{
-    font-size: 24px;
-    color: #dddddd;
+    font-size: 18px;
+    color: #514f4f;
     line-height: 50px;
+}
+.text{
+    font-size: 18px;
+    color: black;
+
 }
