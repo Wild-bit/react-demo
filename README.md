@@ -125,3 +125,169 @@ this.setState({
     }
 })
 ```
+#### React组件通信
+**组件通信的意义**
+> 组件是独立且封闭的单元，默认情况下组件只能使用自己的数据（state）
+> 组件化开发的过程中，完整的功能会拆分多个组件，在这个过程中不可避免的需要互相传递一些数据
+> 为了能让各组件之间可以进行互相沟通，数据传递，这个过程就是组件通信
+
+组件通信的方式包括：
+- 父子关系 - **最重要的**
+- 兄弟关系 - 自定义事件模式产生技术方法 / 通过共同的父组件通信
+- 其它关系 - mobx / redux / 基于hook的方案
+
+**父传子**
+实现父子通信中的父传子，把父组件中的数据传给子组件（通过props）
+**代码实现**
+```jsx
+import React from 'react'
+
+// 函数式子组件
+function FSon(props) {
+  console.log(props)
+  return (
+    <div>
+      子组件1
+      {props.msg}
+    </div>
+  )
+}
+
+// 类子组件
+class CSon extends React.Component {
+  render() {
+    return (
+      <div>
+        子组件2
+        {this.props.msg}
+      </div>
+    )
+  }
+}
+// 父组件
+class App extends React.Component {
+  state = {
+    message: 'this is message'
+  }
+  render() {
+    return (
+      <div>
+        <div>父组件</div>
+        <FSon msg={this.state.message} />
+        <CSon msg={this.state.message} />
+      </div>
+    )
+  }
+}
+
+export default App
+```
+
+注意：
+- 根据单项数据流的要求，子组件只能读取props中的数据，不能进行修改
+- props可以传递任意数据
+  - 数字、字符串、布尔值、数组、对象、函数、JSX
+
+**子传父实现**
+实现父子通信中的子传父
+方式：父组件给子组件传递回调函数，子组件调用
+**代码实现**
+```jsx
+import React from 'react'
+
+// 子组件
+function Son(props) {
+  function handleClick() {
+    // 调用父组件传递过来的回调函数 并注入参数
+    props.changeMsg('this is newMessage')
+  }
+  return (
+    <div>
+      {props.msg}
+      <button onClick={handleClick}>change</button>
+    </div>
+  )
+}
+
+
+class App extends React.Component {
+  state = {
+    message: 'this is message'
+  }
+  // 提供回调函数
+  changeMessage = (newMsg) => {
+    console.log('子组件传过来的数据:',newMsg)
+    this.setState({
+      message: newMsg
+    })
+  }
+  render() {
+    return (
+      <div>
+        <div>父组件</div>
+        <Son
+          msg={this.state.message}
+          // 传递给子组件
+          changeMsg={this.changeMessage}
+        />
+      </div>
+    )
+  }
+}
+
+export default App
+```
+
+**兄弟组件通信**
+方式：通过状态提升机制，利用共同的父组件实现兄弟通信
+**代码实现：**
+```jsx
+import React from 'react'
+
+// 子组件A
+function SonA(props) {
+  return (
+    <div>
+      SonA
+      {props.msg}
+    </div>
+  )
+}
+// 子组件B
+function SonB(props) {
+  return (
+    <div>
+      SonB
+      <button onClick={() => props.changeMsg('new message')}>changeMsg</button>
+    </div>
+  )
+}
+
+// 父组件
+class App extends React.Component {
+  // 父组件提供状态数据
+  state = {
+    message: 'this is message'
+  }
+  // 父组件提供修改数据的方法
+  changeMsg = (newMsg) => {
+    this.setState({
+      message: newMsg
+    })
+  }
+
+  render() {
+    return (
+      <>
+        {/* 接收数据的组件 */}
+        <SonA msg={this.state.message} />
+        {/* 修改数据的组件 */}
+        <SonB changeMsg={this.changeMsg} />
+      </>
+    )
+  }
+}
+
+export default App
+```
+组件通信详情请看源代码src/components/ComponentsCommunication
