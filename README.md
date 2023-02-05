@@ -290,7 +290,24 @@ class App extends React.Component {
 
 export default App
 ```
-组件通信详情请看源代码src/components/ComponentsCommunication
 
-
-
+**跨组件通信Context**
+Context 提供了一个无需为每层组件手动添加 props，就能在组件树间进行数据传递的方法
+**实现步骤：**
+1、创建Context对象 导出 Provider 和 Consumer对象
+```jsx
+const { Provider, Consumer } = createContext()
+```
+2、使用Provider包裹根组件提供数据
+```jsx
+<Provider value={this.state.message}>
+    {/* 根组件 */}
+</Provider>
+```
+3、需要用到数据的组件使用Consumer包裹获取数据
+```jsx
+<Consumer >
+    {value => /* 基于 context 值进行渲染*/}
+</Consumer>
+```
+**组件通信详情请看源代码src/components/ComponentsCommunication**
