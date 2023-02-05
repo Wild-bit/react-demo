@@ -291,3 +291,6 @@ class App extends React.Component {
 export default App
 ```
 组件通信详情请看源代码src/components/ComponentsCommunication
+
+
+

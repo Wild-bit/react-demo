@@ -1,5 +1,6 @@
-import React, { Component } from "react"
+import React, { Component, createContext } from "react"
 import "./ComponentsCommunication.css"
+let { Provider, Consumer } = createContext()
 
 class ComponentsCommunication extends Component {
   state = {
@@ -7,6 +8,7 @@ class ComponentsCommunication extends Component {
       "类组件的父传子通信，由于类组件继承了Component的props属性，所以在内部可以直接通过this.props访问",
     son2Message: "函数组件的父传子可通过参数props来访问",
     receiveSonqMessage: "",
+    grandMessage: "来自爷爷的爱",
     car: {
       name: "奔驰C",
       color: "白色",
@@ -25,16 +27,31 @@ class ComponentsCommunication extends Component {
   }
   render() {
     return (
-      <div className="father">
-        <p>父组件</p>
-        <p>{this.state.receiveSonqMessage}</p>
-        <Son1
-          message={this.state.son1Message}
-          changeMsg={this.changeMsg}
-          car={this.state.car}
-        />
-        <Son2 message={this.state.son2Message} setCar={this.setCar} />
-      </div>
+      <Provider value={this.state.grandMessage}>
+        <div className="father">
+          <p>父组件</p>
+          <p>Provider 传递{this.state.grandMessage}</p>
+          <p>{this.state.receiveSonqMessage}</p>
+          <Son1
+            message={this.state.son1Message}
+            changeMsg={this.changeMsg}
+            car={this.state.car}
+          />
+          <Son2 message={this.state.son2Message} setCar={this.setCar} />
+          <br />
+          <p>
+            跨组件通信（爷孙组件通信）：
+            <span>
+              Context 提供了一个无需为每层组件手动添加
+              props，就能在组件树间进行数据传递的方法
+            </span>
+          </p>
+          <p>1、创建Context对象 导出 Provider 和 Consumer对象</p>
+          <p>2、使用Provider包裹根组件提供数据</p>
+          <p>3、需要用到数据的组件使用Consumer包裹获取数据</p>
+          <Son3 />
+        </div>
+      </Provider>
     )
   }
 }
@@ -75,6 +92,30 @@ function Son2(props) {
       </button>
     </div>
   )
+}
+
+class Son3 extends Component {
+  render() {
+    return (
+      <div className="son3">
+        <p>子组件</p>
+        <GrandSon />
+      </div>
+    )
+  }
+}
+
+class GrandSon extends Component {
+  render() {
+    return (
+      <div className="grandSon">
+        <p>孙子组件</p>
+        <Consumer>
+          {(value) => <p>Consumer接收来自爷爷的爱：{value}</p>}
+        </Consumer>
+      </div>
+    )
+  }
 }
 
 export default ComponentsCommunication
