@@ -311,3 +311,32 @@ const { Provider, Consumer } = createContext()
 </Consumer>
 ```
 **组件通信详情请看源代码src/components/ComponentsCommunication**
+
+
+#### 类组件的生命周期
+
+组件的生命周期是指组件从被创建到挂载到页面中运行起来，再到组件不用时卸载的过程，注意，只有类组件才有生命周期（类组件 需要实例化 函数组件 不需要实例化）
+
+- **初始化constructor**
+- **渲染render**
+- **挂载componentDidMount**
+- **组件更新componentDidUpdate**
+- **组件销毁componentWillUnmount**
+
+**挂载阶段触发的钩子**
+|  钩子函数   | 触发时机  |
+|  ----  | ----  |
+| constructor  | 创建组件时，最先执行，初始化的时候只执行一次 |
+| render  | 每次组件渲染都会触发 |
+| componentDidMount | 组件挂载（完成DOM渲染）后执行，初始化的时候执行一次
+
+**组件更新阶段触发的钩子**
+|  钩子函数   | 触发时机  |
+|  ----  | ----  |
+| render  | 每次组件渲染都会触发 |
+ componentDidUpdate | 组件更新后（DOM渲染完毕）
+
+**组件卸载阶段触发的钩子**
+|  钩子函数   | 触发时机  |
+|  ----  | ----  |
+ componentWillUnmount | 会在组件卸载及销毁之前直接调用
